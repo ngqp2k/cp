@@ -26,9 +26,43 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 #define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)
 
+// Problem: Bo tri phong hop
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
+
+    int n; cin >> n;
+    vector<pair<int, int>> a(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i].first >> a[i].second;
+    }
+
+    dbg(a);
+
+    sort(a.begin(), a.end(), [](const pair<int, int> &a, const pair<int, int> &b) {
+            if (a.second == b.second)
+                return a.first < b.first;
+            return a.second < b.second;
+            });
+    dbg(a);
+
+    int ans = 0;
+
+    vector<int> dp(n);
+    for (int i = 0; i < n; ++i) {
+        dp[i] = a[i].second - a[i].first;
+        for (int j = 0; j < i; ++j) {
+            if (a[j].second <= a[i].first) {
+                dp[i] = max(dp[i], dp[j] + a[i].second - a[i].first);
+            }
+        }
+        ans = max(ans, dp[i]);
+    }
+
+    cout << ans << "\n";
+
+    
 
     return 0;
 }
