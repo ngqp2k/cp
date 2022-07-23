@@ -35,5 +35,15 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
+    int n; cin >> n;
+    vi d(n + 1);
+    for (int i = 1; i <= n; ++i)
+        cin >> d[i];
+    vector<long long> dp(n + 1);
+    dp[2] = d[1], dp[3] = d[1] + d[2];
+    for (int i = 4; i <= n; ++i)
+        dp[i] = min(dp[i - 1], dp[i - 2]) + d[i - 1];
+    cout << dp[n] << '\n';
+
     return 0;
 }

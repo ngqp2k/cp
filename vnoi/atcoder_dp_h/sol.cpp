@@ -1,11 +1,5 @@
 #include <bits/stdc++.h>
-#define infi 1e9
-#define infll 1e18
 using namespace std;
-
-typedef vector<int> vi;
-typedef vector<vector<int>> vii;
-typedef pair<int, int> ii;
 
 void __print(int x) {cerr << x;}
 void __print(long x) {cerr << x;}
@@ -34,6 +28,30 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
+
+    int n, m; cin >> n >> m;
+    vector<vector<int>> g(n + 1, vector<int>(m + 1, 0));
+    for (int i = 1; i <= n; ++i)
+        for (int j = 1; j <= m; ++j) {
+            char ch; cin >> ch;
+            if (ch == '#')
+                g[i][j] = 1;
+        }
+    const int mod = 1e9 + 7;
+
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+    dp[1][1] = 1;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            if (i == 1 && j == 1)
+                continue;
+            if (!g[i][j])
+                dp[i][j] = (dp[i][j - 1] + dp[i - 1][j]) % mod;
+            else
+                dp[i][j] = 0;
+        }
+    }
+    cout << dp[n][m] << '\n';
 
     return 0;
 }
