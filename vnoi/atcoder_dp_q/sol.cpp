@@ -34,5 +34,14 @@ int main() {
 	cin.tie(nullptr);
 	freopen("in", "r", stdin);
 
+    int n; cin >> n;
+    vector<int> h(n + 1), a(n + 1);
+    for (int i = 1; i <= n; ++i)
+        cin >> h[i];
+    for (int i = 1; i <= n; ++i)
+        cin >> a[i];
+    // use BIT
+    // ...
+
 	return 0;
 }

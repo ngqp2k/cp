@@ -34,5 +34,15 @@ int main() {
 	cin.tie(nullptr);
 	freopen("in", "r", stdin);
 
+    const int mod = 2111992;
+
+    int n, k; cin >> n >> k;
+    vector<int> dp(n + 1);
+    for (int i = 1; i <= k + 1; ++i)
+        dp[i] = i + 1;
+    for (int i = k + 2; i <= n; ++i)
+        dp[i] = (dp[i - 1] + dp[i - k - 1]) % mod;
+    cout << dp[n] << '\n';
+
 	return 0;
 }

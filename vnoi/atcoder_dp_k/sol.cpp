@@ -32,7 +32,23 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
-	freopen("in", "r", stdin);
 
+    int n, k; cin >> n >> k;
+    vector<int> a(n + 1);
+    for (int i = 1; i <= n; ++i)
+        cin >> a[i];
+	vector<int> dp(k + 1);
+	dp[0] = 0;
+	for (int i = 1; i <= k; ++i) {
+		for (int j = 1; j <= n; ++j) {
+			if (a[j] > i)
+				break;
+			if (dp[i - a[j]] == 0) {
+				dp[i] = 1;
+				break;
+			}
+		}
+	}
+	cout << (dp[k] == 1 ? "First" : "Second") << '\n';
 	return 0;
 }
