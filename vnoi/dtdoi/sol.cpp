@@ -33,20 +33,27 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-    int n; cin >> n;
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; ++i)
-    	cin >> a[i];
-    vector<vector<long long>> dp(n + 1, vector<long long>(n + 1));
-    for (int i = 1; i <= n; ++i)
-    	dp[i][i] = a[i];
-    for (int step = 1; step < n; ++step) {
-    	for (int i = 1; i <= n - step; ++i) {
-    		int j = i + step;
-    		dp[i][j] = max(a[i] - dp[i + 1][j], a[j] - dp[i][j - 1]);
-    	}
-    }
-    cout << dp[1][n] << "\n";
+	int n, s; cin >> n >> s;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; ++i)
+		cin >> a[i];
+	sort(all(a));
+
+	int ans = (s - a[n] * a[n]) / a[n];
+
+	s = s - ans * a[n];
+
+	vector<int> dp(s + 1);
+	for (int total = 1; total <= s; ++total) {
+		dp[total] = infi;
+		for (int i = 1; i <= n; ++i)
+			if (a[i] > total)
+				 break;
+			else
+				dp[total] = min(dp[total], dp[total - a[i]] + 1);
+	}
+
+	cout << dp[s] + ans << "\n";
 
 	return 0;
 }

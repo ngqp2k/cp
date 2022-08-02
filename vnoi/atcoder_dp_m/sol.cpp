@@ -33,20 +33,30 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-    int n; cin >> n;
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; ++i)
-    	cin >> a[i];
-    vector<vector<long long>> dp(n + 1, vector<long long>(n + 1));
-    for (int i = 1; i <= n; ++i)
-    	dp[i][i] = a[i];
-    for (int step = 1; step < n; ++step) {
-    	for (int i = 1; i <= n - step; ++i) {
-    		int j = i + step;
-    		dp[i][j] = max(a[i] - dp[i + 1][j], a[j] - dp[i][j - 1]);
-    	}
-    }
-    cout << dp[1][n] << "\n";
+	const int mod = 1e9 + 7;
+
+	int n, k; cin >> n >> k;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; ++i)
+		cin >> a[i];
+	sort(all(a));
+	vector<vector<int>> f(2, vector<int>(k + 1));
+	int first = 0, second = 1;
+	f[second][0] = f[first][0] = 1;
+	for (int i = 1; i <= n; ++i) {
+		swap(first, second);
+		for (int j = 1; j <= k; ++j) {
+			int l = max(0, j - a[i]);
+			int v;
+			if (l)
+				v = (f[first][j] % mod - f[first][l - 1] % mod + mod) % mod;
+			else
+				v = f[first][j];
+			f[second][j] = (f[second][j - 1] % mod + v % mod);
+		}
+	}
+
+	cout << f[second][k] % mod << "\n";
 
 	return 0;
 }

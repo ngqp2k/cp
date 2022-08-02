@@ -29,24 +29,38 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 #define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)
 
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-    int n; cin >> n;
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; ++i)
-    	cin >> a[i];
-    vector<vector<long long>> dp(n + 1, vector<long long>(n + 1));
-    for (int i = 1; i <= n; ++i)
-    	dp[i][i] = a[i];
-    for (int step = 1; step < n; ++step) {
-    	for (int i = 1; i <= n - step; ++i) {
-    		int j = i + step;
-    		dp[i][j] = max(a[i] - dp[i + 1][j], a[j] - dp[i][j - 1]);
-    	}
-    }
-    cout << dp[1][n] << "\n";
+	int n; cin >> n;
+	vector<long long> a(n + 1), b(n + 1), c(n + 1);
+	for (int i = 1; i <= n; ++i)
+		cin >> a[i] >> b[i] >> c[i];
+
+	vector<vector<vector<long long>>> dp(n + 1, vector<vector<long long>>(n + 1, vector<long long>(n + 1, infll)));
+	dp[0][0][0] = 0;
+	for (int i = 1; i <= n; ++i) {
+		for (int cnt_b = 0; cnt_b < i; ++cnt_b) {
+			for (int cnt_c = 0; cnt_c + cnt_b < i; ++cnt_c) {
+				dp[i][cnt_b][cnt_c] = min(dp[i][cnt_b][cnt_c], dp[i - 1][cnt_b][cnt_c] + a[i]);
+				dp[i][cnt_b + 1][cnt_c] = min(dp[i][cnt_b + 1][cnt_c], dp[i - 1][cnt_b][cnt_c] + b[i] - cnt_b);
+				dp[i][cnt_b][cnt_c + 1] = min(dp[i][cnt_b][cnt_c + 1], dp[i - 1][cnt_b][cnt_c] + c[i] - cnt_c);
+			}
+		}
+	}
+
+	// Subtack n <= 200
+
+	long long ans = infll;
+	for (int cnt_b = 0; cnt_b <= n; ++cnt_b) {
+		for (int cnt_c = 0; cnt_c + cnt_b <= n; ++cnt_c) {
+			ans = min(ans, dp[n][cnt_b][cnt_c]);
+		}
+	}
+
+	cout << ans << "\n";
 
 	return 0;
 }

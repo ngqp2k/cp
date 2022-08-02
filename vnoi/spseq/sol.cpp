@@ -33,20 +33,30 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-    int n; cin >> n;
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; ++i)
-    	cin >> a[i];
-    vector<vector<long long>> dp(n + 1, vector<long long>(n + 1));
-    for (int i = 1; i <= n; ++i)
-    	dp[i][i] = a[i];
-    for (int step = 1; step < n; ++step) {
-    	for (int i = 1; i <= n - step; ++i) {
-    		int j = i + step;
-    		dp[i][j] = max(a[i] - dp[i + 1][j], a[j] - dp[i][j - 1]);
-    	}
-    }
-    cout << dp[1][n] << "\n";
+	int n; cin >> n;
+	vector<int> a(n);
+	for (int i = 0; i < n; ++i)
+		cin >> a[i];
+
+	auto lis = [&] (vector<int> a) {
+		vector<int> d(a.size(), infi), ans(a.size());
+		for (int i = 0; i < a.size(); ++i) {
+			int pos = lower_bound(all(d), a[i]) - d.begin();
+			d[pos] = a[i];
+			ans[i] = pos + 1;
+		}
+		return ans;
+	};
+
+	auto d1 = lis(a);
+	reverse(all(a));
+	auto d2 = lis(a);
+	reverse(all(d2));
+	int ans = 0;
+	for (int i = 0; i < n; ++i)
+		ans = max(ans, min(d1[i], d2[i]) * 2 - 1);
+
+	cout << ans << "\n";
 
 	return 0;
 }

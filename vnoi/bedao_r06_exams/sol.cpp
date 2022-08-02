@@ -29,24 +29,27 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 
 #define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)
 
+const int mod = 1e9 + 7;
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-    int n; cin >> n;
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; ++i)
-    	cin >> a[i];
-    vector<vector<long long>> dp(n + 1, vector<long long>(n + 1));
-    for (int i = 1; i <= n; ++i)
-    	dp[i][i] = a[i];
-    for (int step = 1; step < n; ++step) {
-    	for (int i = 1; i <= n - step; ++i) {
-    		int j = i + step;
-    		dp[i][j] = max(a[i] - dp[i + 1][j], a[j] - dp[i][j - 1]);
-    	}
-    }
-    cout << dp[1][n] << "\n";
+	int n; cin >> n;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; ++i)
+		cin >> a[i];
+
+	vector<vector<long long>> dp(n + 1, vector<long long>(4));
+
+	for (int i = 1; i <= n; ++i)
+		dp[i][1] = dp[i - 1][1] + a[i];
+	for (int j = 2; j <= 3; ++j) {
+		for (int i = j; i <= n; ++i)
+			dp[i][j] = (dp[i - 1][j] % mod + (dp[i - 1][j - 1] % mod * a[i] % mod) % mod) % mod;
+	}
+
+	cout << dp[n][3] << '\n';
 
 	return 0;
 }
