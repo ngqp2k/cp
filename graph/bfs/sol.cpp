@@ -35,5 +35,29 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
+	int n, m; cin >> n >> m;
+	vector<vector<int>> g(n);
+	for (int i = 0; i < m; ++i) {
+		int u, v; cin >> u >> v;
+		u--, v--;
+		g[u].pb(v);
+		g[v].pb(u);
+	}
+	vector<bool> vis(n, false);
+	stack<int> st;
+	st.push(0);
+	vis[0] = true;
+	while (!st.empty()) {
+		int u = st.top();
+		st.pop();
+		for (int v: g[u])
+			if (!vis[v]) {
+				vis[v] = true;
+				st.push(v);
+			}
+	}
+	for (int i = 0; i < n; ++i)
+		if (!vis[i])
+			cout << i + 1 << "\n";
 	return 0;
 }

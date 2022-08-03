@@ -3,8 +3,6 @@
 #define infll 1e18 + 7
 #define all(a) (a).begin(), (a).end()
 #define pb push_back
-#define fi first
-#define se second
 using namespace std;
 
 void __print(int x) {cerr << x;}
