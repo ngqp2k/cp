@@ -1,52 +1,42 @@
+// Source: vietcodes.github.io
 #include <bits/stdc++.h>
 using namespace std;
 
-void __print(int x) {cerr << x;}
-void __print(long x) {cerr << x;}
-void __print(long long x) {cerr << x;}
-void __print(unsigned x) {cerr << x;}
-void __print(unsigned long x) {cerr << x;}
-void __print(unsigned long long x) {cerr << x;}
-void __print(float x) {cerr << x;}
-void __print(double x) {cerr << x;}
-void __print(long double x) {cerr << x;}
-void __print(char x) {cerr << '\'' << x << '\'';}
-void __print(const char *x) {cerr << '\"' << x << '\"';}
-void __print(const string &x) {cerr << '\"' << x << '\"';}
-void __print(bool x) {cerr << (x ? "true" : "false");}
+struct Fenwick {
+    int n;
+    vector<int> f;
+    Fenwick(int n): n(n), f(n+1, 0) {}
+    void set(int x, int i) {
+        for (; i <= n; i += i & (-i)) f[i] = max(f[i], x);
+    }
+    int get(int i) const {
+        int r = 0;
+        for (; i > 0; i -= i & (-i)) r = max(r, f[i]);
+        return r;
+    }
+};
 
-template<typename T, typename V>
-void __print(const pair<T, V> &x) {cerr << '{'; __print(x.first); cerr << ','; __print(x.second); cerr << '}';}
-template<typename T>
-void __print(const T &x) {int f = 0; cerr << '{'; for (auto &i: x) cerr << (f++ ? "," : ""), __print(i); cerr << "}";}
-void _print() {cerr << "]\n";}
-template <typename T, typename... V>
-void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
+void compress(vector<int> &a) {
+    set<int> s(a.begin(), a.end());
+    vector<int> b(s.begin(), s.end());
+    for (int &x: a) {
+        x = lower_bound(b.begin(), b.end(), x) - b.begin() + 1;
+    }
+}
 
-#define dbg(x...) cerr << "[" << #x << "] = ["; _print(x)
-
-const int mxn = 1e3 + 11;
-int n;
-int a[mxn], dp[mxn];
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+    ios_base::sync_with_stdio(false); cin.tie(nullptr);
 
-		cin >> n;
-		for (int i = 1; i <= n; ++i)
-			cin >> a[i];
+    int n; cin >> n;
+    vector<int> a(n);
+    for (int &x: a) cin >> x;
 
-		int ans = 0;
-		for (int i = 1; i <= n; ++i) {
-			dp[i] = 1;
-			for (int j = 1; j < i; ++j)
-				if (a[j] < a[i])
-					dp[i] = max(dp[i], dp[j] + 1);
-				ans = max(ans, dp[i]);
-		}
+    compress(a);
 
-		cout << ans << "\n";
+    Fenwick bit(n);
+    for (int x: a) bit.set(bit.get(x-1) + 1, x);
 
+    cout << bit.get(n);
     return 0;
 }
